@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Catalog</title>
+<link rel="stylesheet" href="css/mainStyles.css">
+<link rel="stylesheet" href="js/jquery-ui-1.11.4/jquery-ui.structure.css" />
+<link rel="stylesheet" href="js/jquery-ui-1.11.4/jquery-ui.theme.css" />
+<style type="text/css" media="screen">
+    .buttons_bar {
+        text-align: right;
+    } 
+    #pnl-login, #btn-folders, #folder-selector {
+        display: none;
+    }
+    #pnl-login ul {
+        list-style-type:none;
+    }
+    #pnl-login li {
+        line-height: 45px;
+    }
+    #folder-selector ul {
+        list-style-type:none;
+    }
+    #folder-selector li {
+        line-height: 45px;
+    }
+</style>
+</head>
+<body>
+<div class="header">
+<!--<div class="mainLogo"><a href="#"><img src="images/mainLogo_b.jpg" alt="BiblioVOX"/></a></div>-->
+<div class="return"><a id="returnhref" href="#" "><img id="return" src="images/icon_return.png" alt="Retour à la page d'accueil" /></a></div>
+<div class="clear"></div>
+</div>
+
+<div id="pnl-login" title="Se connecter" >
+    <form id="frm-login">
+    <ul>
+    <li class="errorMessage" id="frm-error" style="display:none;">Erreur dans l'identifiant <br>et/ou dans le mot de passe.</li>
+    <li><label><input type="text" name="_username" id="username" class="champTexte" placeholder="Username" type="text"></label></li>
+    <li><label><input type="password" name="_password" id="password" class="champTexte" placeholder="Password" type="text"></label></li>
+    <li><input type="submit" class="button" name="btn-login" id="btn-login" value="Se connecter" /> <a href="#" id="btn-cancel">Annuler</a></li>
+    </ul>
+    </form>
+</div>
+
+<div id="folder-selector" title="Ajouter la liste à mes étagères">
+    <ul>
+    <li><p>Choisissez une étagère</p></li>
+    <li><p><select class="champtexte" id="folders-list">
+        <option value="0">[select.]</option>
+    </select></p></li>
+    <li class="spacer"><p>ou créez une nouvelle étagère</p></li>
+    <li ><p><label><input name="foldername" id="foldername" class="champTexte" placeholder="Nom de l'étagère" type="text"></label></p></li>
+    <li><p><select class="champtexte" id="foldertype" name="foldertype">
+            <option value="">[Type]</option>
+            <option value="COURS">Cours</option>
+            <option value="RAYON">Dossier</option>
+        </select>
+        </p>
+    </li>
+    <li>
+        <a class="button" id="btn-folder-save" href="#">Enregistrer</a> 
+        <a class="button" id="btn-folder-cancel" href="#">Cancel</a> 
+    </li>
+    </ul>
+</div>
+
+<!--<div class="search">&nbsp;</div>-->
+<div class="playGround resultsMood openedNav">
+
+	<div class="sideFilter">
+    	<div class="content">
+            <div class="group" id="filters-meta">
+                <p><a class="filter_item" href="javascript:void(0);" id="btn-filter-publisher" data-group="meta" data-url="/catalog/catbrowsefacet/publisher" data-name="publisher" data-title="Editeurs" data-idfield="publisherid" data-namefield="publishername" data-activeitem="active-filter-publisher">Editeurs</a>
+                <br><a class="activeFilter" href="javascript:void(0);" id="active-filter-publisher" style="display:none;">&nbsp;</a>
+                </p>
+                <p><a class="filter_item" href="javascript:void(0);" id="btn-filter-lang" data-group="meta" data-url="/catalog/catbrowsefacet/lang" data-name="lang" data-title="Langue" data-idfield="lang" data-namefield="lang" data-activeitem="active-filter-lang">Langue</a>
+                <br><a class="activeFilter" href="javascript:void(0);" id="active-filter-lang" style="display:none;">&nbsp;</a>
+                </p>
+                <p><a class="filter_item" href="javascript:void(0);" id="btn-filter-doctype" data-group="meta" data-url="/catalog/catbrowsefacet/doctype" data-name="doctype" data-title="Type de document" data-idfield="doctypeid" data-namefield="DocTypeName" data-activeitem="active-filter-doctype">Type de document</a>
+                <br><a class="activeFilter" href="javascript:void(0);" id="active-filter-doctype" style="display:none;">&nbsp;</a>
+                </p>
+                <p><a class="filter_item" href="javascript:void(0);" id="btn-filter-pubdate" data-group="meta" data-url="/catalog/catbrowsefacet/pubdate" data-name="pubdate" data-title="Date de publication" data-idfield="pubdate" data-namefield="pubdate" data-activeitem="active-filter-pubdate">Date de publication</a>
+                <br><a class="activeFilter" href="javascript:void(0);" id="active-filter-pubdate" style="display:none;">&nbsp;</a>
+                </p>
+            </div>        
+        </div>
+    </div>
+    
+    
+	<!--<div class="title">
+    	<h2>Ajouter la liste à mes étagères</h2>
+        <a href="#" class="addToButton" id="btn-folders" title="Ajouter aux étagères"><img src="images/btns_addToBookshelfTransp.png"></a>
+    </div>-->  
+	<div class="subTitle">
+        <h3>Institutions: <span id="schools"></span></h3>
+        <h3>Editeur: <span id="selpublisher"></span></h3>
+        <h3>Niveau 1: <span id="selniveau1"></span></h3>
+        <h3>Niveau 2: <span id="selniveau2"></span></h3>
+        <h3>Total: <span id="totalcount"></span></h3>
+        <h3>Trier par :   <a href="#" class="sortfields" data-item="title">Titre</a> | <a class="sortfields" href="#" data-item="author">Auteur</a> | <a class="sortfields active" href="#" data-item="pubdate" >Année de publication</a>
+
+        <span class="QR"></span>
+        <span class="switchResultMode">
+            <a id="btn-switch-mode" href="#" data-item="diapo"><img src="images/switchToDiapo.png" alt="Mode Diaporama" /></a>
+        </span>
+    </div>
+    <div id="results">
+        
+    </div>
+</div>
+<div id="dlg-filter-list" title="Basic dialog">
+</div>
+
+<div class="footer" id="footer">
+    <div class="footerItem footerOne">
+    </div>
+    <div class="footerItem footerTwo">
+    </div>
+    <div class="footerItem footerThree">
+    </div>
+    <div class="clear"></div>
+</div>
+
+<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.11.4/jquery-ui.min.js"></script>
+
+<script type="text/javascript">
+    var proto = document.location.protocol;
+    //var bksapi = proto + '//www.lilliadvis.io/bookshelfmgr/js?accesskey=9BMR5Z1zPQ3scSjHc1fs7e9txrhIbuU1OcIKH6Kw'; 
+    var bksapi = 'https://www.lilliadvis.io/bookshelfmgr/js?accesskey=9BMR5Z1zPQ3scSjHc1fs7e9txrhIbuU1OcIKH6Kw'; 
+    document.write("<sc" + "ript type='text/javascript' src='" + bksapi + "'></" + "script>");
+</script>
+
+<script type="text/javascript" src="js/mustache.min.js"></script>
+<script type="text/javascript" src="js/lokijs.min.js"></script>
+<script type="text/javascript" src="js/underscore-min.js"></script>
+
+<script type="text/javascript" src="js/utils.js"></script>
+
+<script type="text/javascript" src="js/jquery.noty.packaged.min.js"></script>
+<script type="text/javascript" src="js/noty_relax.js"></script>
+
+<script type="text/javascript" src="js/gcatmem.js"></script>
+<script type="text/javascript" src="js/bksfilters.js"></script>
+<script type="text/javascript" src="js/bksinter.js"></script>
+
+<script type="text/template" id="tpl-results-list">
+{{#list}}
+<div class="item" id="item-list-{{docid}}" data-weight="{{weight}}">
+<div class="omniBookContainer" >
+    <div class="coverContainer"> 
+        <a style="pointer-events: all;" target="_blank" href="http://{{remoteHost}}/catalog/book/docid/{{docid}}" title="{{title}}">
+            <img class="bookCover" src="https://www.lilliadvis.io/static/books_upload/180pix/{{coverimg}}" onerror="this.onerror=null;this.src='https://www.lilliadvis.io/static/books_upload/136pix/no_cover136.jpg';"/></a>
+    </div>
+    <p class="bookTitle"><a style="pointer-events: all;" target="_blank" href="http://{{remoteHost}}/catalog/book/docid/{{docid}}" title="{{title}}">{{title}}</a></p>
+    <p class="bookInfos">Author: <a href="#">{{contributor1}}</a></p>
+    <p class="bookInfos">Publisher: <a href="#">{{publishername}}</a></p>
+    <p class="bookInfos">Pub.: {{pubdate}}</p>
+    {{#decitre_name}}
+    <p class="bookInfos">Sujets: {{decitre_name }} <!-- ({{ decitre }}) --></p>
+    {{/decitre_name}}
+    {{#classname}}
+    <p class="bookInfos">Thème: {{ classname }} <!-- ({{ classid }}) --></p>
+    {{/classname}}
+    <p class="bookButtons">
+        {{>toolbar}}
+    </p>
+    <div class="clear tpl-results-list" id="{{itemIndex}}"></div>
+</div>
+</div>
+{{/list}}
+</script>
+
+<script type="text/template" id="tpl-results-list-diapo">
+{{#list}}
+    <div class="diapoItem" id="{{idx}}" data-weight="{{weight}}">
+        <a style="pointer-events: all;" target="_blank" href="http://{{remoteHost}}/catalog/book/docid/{{docid}}" title="{{title}}"><img class="bookCover" src="https://www.lilliadvis.io/static/books_upload/180pix/{{coverimg}}" 
+        onerror="this.onerror=null;this.src='https://www.lilliadvis.io/static/books_upload/136pix/{{details.coverimg}}';"/></a>
+        <div class="bookButtons">
+        {{>toolbar}}
+        </div>
+    </div>
+    {{#needsep}}
+    <div class="clear tpl-results-list" id="{{itemIndex}}"></div>
+    {{/needsep}}
+{{/list}}
+    <div class="clear"></div>
+</script>
+
+<script type="text/template" id="tpl-filter-list">
+<div class="filter_container">
+{{#list}}
+<div class="resultItem">
+    <p><a href="javascript:;" class="filter_item {{selectedItemClass}}" data-item="{{id}}" data-name="{{name}}">{{name}} ({{count}})</a></p>
+</div>
+{{/list}}
+</div>
+</script>
+
+<script type="text/template" id="tpl-themes-list">
+<div class="filter_container">
+{{#list}}
+<p id="theme-filter-{{id}}">
+    <a href="javascript:void(0);" data-item="{{id}}" data-name="{{descr}}" class="filter_item">{{descr}}</a>
+{{#themeList}}
+    <a class="activeFilter" href="javascript:void(0);" id="active-filter-theme-{{ID}}" data-item="{{ID}}" data-name="{{Descr}}" style="display:none;">{{Descr}}</a>
+{{/themeList}}
+</p>
+{{/list}}
+</div>
+</script>
+
+</body>
+</html>

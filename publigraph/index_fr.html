@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<title>PubliGRAPH</title>
+<link rel="stylesheet" href="css/css.css">
+<script src="js/jquery-1.11.3.min.js"></script>
+<script src="js/demo.js"></script>
+<script type="text/javascript" src="js/dothemagicdance.js"></script>
+<body>
+	<div class="deviceAlert"><h3>L'affichage de votre écran ne permet pas une visualisation correcte de ce site. Visitez nous avec un autre support.</h3>
+	</div>
+
+	<div class="exploreSubNav hidden">
+	    <div class="close">
+	        <a href="#"><img src="images/pictoClose.png" alt="Close"></a>
+	    </div>
+	    <div class="navFlap" id="nav-main">
+	        <ul>
+	            <li><a class="closeMe" href="../publivisio/boussole/index.html?db=community_acad&lang=fr" target="_self">Ecoles de commerce</a></li>
+	            <li><a class="closeMe" href="../publivisio/boussole/index.html?db=vox_univ&lang=fr" target="_self">Universités françaises</a></li>
+	            <li><a class="closeMe" href="../publivisio/boussole/index.html?db=international&lang=fr" target="_self">Universités internationales</a></li>
+	            <li><a class="closeMe" href="../publivisio/boussole/index.html?db=biblio&lang=fr" target="_self">Bibliothèques publiques</a></li>
+	        </ul>
+	    </div>
+	</div>
+	
+	<div class="header">
+	    <div class="mainLogo">
+		    <a href="../publigraph/index.html"><img src="images/Publigraph_Logo.png" alt="Publigraph"></a>
+	    </div>
+	    <div class="nav">
+	        <a href="../publivisio/homepage/index.html">PubliVisIO</a> -
+	        <a href="#" class="exploreClic">Explorer</a> -
+	        <a href="index.html">English version</a> <!--
+	        <a href="#">About</a> - -->
+	    </div>
+	</div>
+	<div id="infopane">
+		<p>Nombre d'institutions actives : <span class="values" id="iidvalue">-</span></p>
+		<p>Nombre de livres actifs : <span class="values" id="docidvalue">-</span></p>
+		<p>Nombre médian de livres sauvegardés par institution: <span class="values" id="medianvalue">-</span></p>
+		<p>75ème centile de livres sauvegardés par institution: <span class="values" id="sevfivevalue">-</span></p>
+	</div>
+	<svg id="svggraph"></svg>
+	<svg id="svgsliderlink"></svg>
+	<div id="listofpublishersdiv">
+		<select id="listofpublishers"></select>
+	</div>	
+	<div id="continuediv">
+		<a id="continuebutton" href="../publivisio/homepage/index_fr.html">Continuer vers PubliVisIO</a>
+	</div>
+</body>
+
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<!--<script src="js/d3.min.js"></script>-->
+<script src="js/jquery-1.11.3.min.js"></script>
+<script src="js/graph.js"></script>

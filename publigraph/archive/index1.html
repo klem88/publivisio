@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<title>PubliGRAPH</title>
+<link rel="stylesheet" href="css/css.css">
+<script src="js/jquery-1.11.3.min.js"></script>
+<script src="js/demo.js"></script>
+<script type="text/javascript" src="js/dothemagicdance.js"></script>
+<body>
+	<div class="deviceAlert"><h3>L'affichage de votre écran ne permet pas une visualisation correcte de ce site. Visitez nous avec un autre support.</h3>
+	</div>
+
+	<div class="exploreSubNav hidden">
+	    <div class="close">
+	        <a href="#"><img src="images/pictoClose.png" alt="Close"></a>
+	    </div>
+	    <div class="navFlap" id="nav-main">
+	        <ul>
+	            <li><a class="closeMe" href="../boussole/index.html?db=community_acad&lang=en" target="_self">Business Schools</a></li>
+	            <li><a class="closeMe" href="../boussole/index.html?db=vox_univ&lang=en" target="_self">French Universities</a></li>
+	            <li><a class="closeMe" href="../boussole/index.html?db=international&lang=en" target="_self">International Universities</a></li>
+	            <li><a class="closeMe" href="../boussole/index.html?db=biblio&lang=en" target="_self">Public Libraries</a></li>
+	        </ul>
+	    </div>
+	</div>
+	
+	<div class="header">
+	    <div class="mainLogo">
+		    <a href="../publigraph/index.html"><img src="images/Publigraph_Logo.png" alt="Publigraph"></a>
+	    </div>
+	    <div class="nav">
+	        <a href="../homepage/index.html">PubliVisIO</a> -
+	        <a href="#" class="exploreClic">Explore</a> -
+	        <a href="index_fr.html">Version française</a> <!--
+	        <a href="#">About</a> - -->
+	    </div>
+	</div>
+	<div id="infopane">
+		<p>Number of active institutions : <span class="values" id="iidvalue">-</span></p>
+		<p>Number of distinct books : <span class="values" id="docidvalue">-</span></p>
+		<p>Median number of distinct books shelved per institution: <span class="values" id="medianvalue">-</span></p>
+		<p>75th percentile of distinct books shelved per institution: <span class="values" id="sevfivevalue">-</span></p>
+	</div>
+	<svg id="svggraph"></svg>
+	<svg id="svgsliderlink"></svg>
+	<div id="continuediv">
+		<a id="continuebutton" href="../homepage/index.html">Continue to PubliVisIO</a>
+	</div>
+</body>
+
+<script src="js/d3.min.js"></script>
+<script src="js/jquery-1.11.3.min.js"></script>
+
+<script type="text/javascript">
+// SET THE VARIABLES
+var datafile = 'data/publigraphdata.json';
+var zoomextent = [0.8, 50];
+var clickcounter = 0;
+
+var linkopacity_off = 0.2;
+var linkopacity_on = 0.9;
+var linkopacity_hidden = 0.1;
+
+var labelopacity_off = 0.6;
+var labelopacity_on = 1;
+var labelopacity_hidden = 0.1;
+
+var fontsizeOnmouseover = 130;
+var fontsize = 60;
+
+var nodes = [];
+var links = [];
+
+var linkvalue = 30;
+
+var fromfilter = 'All';
+
+//Additional colors from https://jnnnnn.blogspot.fr/2017/02/distinct-colours-2.html
+var color = d3
+	.scaleOrdinal()
+	.range(d3.schemeCategory20.concat([ "#158940", "#f898fd", "#24c9d7", "#cb9b64", "#866888", "#22e67a", "#e509ae", "#9dabfa", "#437e8a", "#b21bff", "#ff7b91", "#94aa05", "#ac5906", "#82a68d", "#fe6616", "#7a7352", "#f9bc0f", "#b65d66", "#07a2e6", "#c091ae", "#8a91a7", "#88fc07", "#ea42fe", "#9e8010", "#10b437", "#c281fe", "#f92b75", "#07c99d", "#a946aa", "#bfd544", "#16977e", "#ff6ac8", "#a88178", "#5776a9", "#678007", "#fa9316", "#85c070", "#6aa2a9", "#989e5d", "#fe9169", "#cd714a", "#6ed014", "#c5639c", "#c23271", "#698ffc", "#678275", "#c5a121", "#a978ba", "#ee534e", "#d24506", "#59c3fa", "#ca7b0a", "#6f7385", "#9a634a", "#48aa6f", "#ad9ad0", "#d7908c"]));
+
+//SET THE ZOOM HANDLER
+var zoom = d3
+	.zoom()
+	.scaleExtent(zoomextent)
+	.on("zoom", zoomed);
+
+var svg = d3
+	.select("#svggraph")
+	.call(zoom)
+	.on('click', function(){
+		fromfilter = 'All';
+		d3.selectAll('.values').text('-');
+		drawgraph(nodes, links);
+	})
+	.append('g')
+	.attr('class', 'gcontainer');
+
+svg
+	.append("g")
+	.attr("class", "alllinks");
+
+svg
+	.append("g")
+	.attr("class", "allnodes");
+
+svg
+	.append("g")
+	.attr("class", "alltextnodes");
+
+var slider = d3
+	.select("#svgsliderlink")
+	.append('g')
+	.attr('class', 'gslider');
+
+var width = parseInt(d3.select('#svggraph').style('width'), 10);
+var height = parseInt(d3.select('#svggraph').style('height'), 10);
+var sliderwidth = parseInt(d3.select('#svgsliderlink').style('width'), 10);
+var sliderstart = 0.2 * height;
+var widthorheight = Math.min(width, height);
+var nodeslinksrange = [.005 * widthorheight, .03 * widthorheight];
+var nodesradiusrange = [.012 * widthorheight, .07 * widthorheight];
+
+// SET THE SLIDER
+slider
+	.append('rect')
+	.attr('fill', '#777777')
+	.attr('stroke', '#777777')
+	.attr('x', sliderwidth / 2)
+	.attr('y', sliderstart)
+	.attr('width', 4)
+	.attr('height', height - (2 * sliderstart))
+	.attr('rx', 0)
+	.attr('stroke-width', 3);
+
+var sliderhandle = slider
+	.append('circle')
+	.attr('id', 'handle')
+	.attr('fill', '#878787')
+	.attr('stroke', '#878787')
+	.attr('stroke-width', 2)
+	.attr('cx', sliderwidth / 2)
+	.attr('r', sliderwidth / 4);
+
+slider
+	.append('text')
+	.attr('id', 'slidervalue')
+	.attr('x', sliderwidth / 2)
+	.attr('text-anchor', 'middle')
+	.attr('dominant-baseline','middle')
+	.attr('font-size', '1.5em')
+	.attr('pointer-events', 'none ')
+	.attr('fill', '#d1d1d1')
+	.text(linkvalue);
+
+// SET THE FORCES
+var simulation = d3
+	.forceSimulation()
+	.force(
+		"link", d3
+			.forceLink()
+			.strength(0)
+			.id(function(d) {return d.publisherid; }) //Permet de faire le lien entre Nodes et Links (by "id")
+	)
+	.force(
+		"charge", d3
+			.forceManyBody()
+			.strength(function(d){ return -100; })
+		)
+	.force("x", d3.forceX().x(function(d) { return width / 2; }).strength(.2))
+	.force("y", d3.forceY().y(function(d) { return height / 2; }).strength(.2))
+	.force("collide",d3.forceCollide( function(d) { return nodescale(d.size) + 15; } ).strength(1).iterations(4))
+	.alphaMin(.01)
+	.alphaDecay(.02);
+
+
+d3.json(datafile, function(error, data) {
+	if (error) return console.warn(error);
+	
+	//NODES
+	data.nodes.publisherid.map(function(d, i){
+		nodes.push({'publisherid' : `id${d}`, 'size' : data.nodes.size[i], 'publisher' : data.nodes.publisher[i], 'distinctdocid' : data.nodes.distinctdocid[i], 'mediannbdistinctdocidperiid' : data.nodes.mediannbdistinctdocidperiid[i], 'q75nbdistinctdocidperiid' : data.nodes.q75nbdistinctdocidperiid[i]});
+	});
+	
+	//LINKS
+	data.links.source.map(function(d, i){
+		links.push({'source' : `id${d}`, 'target' : `id${data.links.target[i]}`, 'size' : data.links.size[i]});
+	});
+
+	// SLIDER SCALE
+	sliderscale = d3.scaleLinear()
+		.domain([sliderstart, height - sliderstart])
+		.range([0, d3.max(links.map(function(d){ return d.size; }))])
+
+	d3
+		.select("#slidervalue")
+		.attr('y', sliderscale.invert(linkvalue));
+
+	// SLIDER 
+	sliderhandle
+		.attr('cy', sliderscale.invert(linkvalue))
+		.call(d3.drag()
+			.on("drag", function() {
+				filteredy = Math.max(sliderstart, Math.min((height - sliderstart), d3.event.y))
+				linkvalue = Math.round(sliderscale(filteredy, 0));
+
+				d3
+					.select(this)
+					.attr('cy', filteredy);
+				d3
+					.select("#slidervalue")
+					.attr('y', filteredy)
+					.text(`${linkvalue}`)
+
+				drawgraph(nodes, links);
+			})
+		);
+
+	drawgraph(nodes, links);
+});
+
+
+
+function drawgraph(nodes, links){
+
+	//LINKS AND NODES FILTERED
+	var linksfilterednodes = [];
+	var linksfiltered = links
+		.filter(function(d){
+			let tempsource = (d.source.publisherid === undefined) ? d.source : d.source.publisherid;
+			let temptarget = (d.target.publisherid === undefined) ? d.target : d.target.publisherid;
+			return d.size >= linkvalue & 
+			((fromfilter == 'All') ? false : (tempsource == fromfilter | temptarget == fromfilter))
+		});
+	linksfiltered.map(function(d){
+			let tempsource = (d.source.publisherid === undefined) ? d.source : d.source.publisherid;
+			let temptarget = (d.target.publisherid === undefined) ? d.target : d.target.publisherid;
+			if(linksfilterednodes.indexOf(tempsource) < 0){linksfilterednodes.push(tempsource)};
+			if(linksfilterednodes.indexOf(temptarget) < 0){linksfilterednodes.push(temptarget)};
+		});
+
+	var nodesfiltered = nodes
+		.filter(function(d){ 
+			if(fromfilter != 'All'){
+				return linksfilterednodes.includes(d.publisherid) ;
+			} else {
+				return d.size >= linkvalue;
+			};
+		});
+
+	// NODES AND LINKS SCALES
+	nodescale = d3.scaleLinear()
+		.domain(d3.extent(nodesfiltered.map(function(d){ return d.size; })))
+		.range(nodesradiusrange);
+
+	linkscale = d3.scaleLinear()
+		.domain(d3.extent(linksfiltered.map(function(d){ return d.size; })))
+		.range(nodeslinksrange);
+
+
+	// LINKS
+	var link = svg
+		.select(".alllinks")
+		.selectAll(".onelink")
+		.data(linksfiltered, function(d){ return (d.source.id === undefined) ? `${d.source}${d.target}` : `${d.source.id}${d.target.id}`; });
+
+	link.exit().remove();
+
+	linkupd = link
+		.enter()
+		.append("line")
+		.attr('class', "onelink")
+		.merge(link)
+		.style('stroke', '#999')
+		.style('stroke-opacity', linkopacity_off)
+		.attr("stroke-width", function(e) { return linkscale(e.size); })
+		.on("mouseover", function(d){
+			d3
+				.selectAll('.onelink')
+				.transition()
+				.style('stroke-opacity', linkopacity_hidden);
+			d3
+				.selectAll('.nodetext')
+				.transition()
+				.style('opacity', labelopacity_hidden);
+			d3
+				.select(this)
+				.transition()
+				.style('stroke-opacity', linkopacity_on);
+			d3
+				.selectAll(".nodetext")
+				.filter(function(e){ return e.publisherid == d.source.publisherid | e.publisherid == d.target.publisherid; })
+				.transition()
+				.style('font-size', (fontsizeOnmouseover) + '%')
+				.style("opacity", labelopacity_on)
+				.text(function(e){ return `${e.publisher} (${d.size})`; });
+		})
+		.on("mouseout", function(d){
+			d3
+				.selectAll('.onelink')
+				.transition()
+				.style('stroke-opacity', linkopacity_off);
+
+			d3
+				.selectAll(".nodetext")
+				.transition()
+				.style('font-size', (fontsize) + '%')
+				.style("opacity", labelopacity_off)
+				.text(function(e){ return e.publisher; });
+		})
+		.on('click', function(d){				
+			//SELECT THE LINK
+			//drawgraph(nodes, links);
+		});
+
+	// NODES
+	groupnode = svg
+		.select(".allnodes")
+		.selectAll(".onenode")
+		.data(nodesfiltered, function(d){ return d.publisherid; });
+
+	groupnode.exit().remove();
+
+	groupnode
+		.transition()
+		.ease(d3.easeExpOut)
+		.duration(1000)
+		.attr("r", function(d) { return nodescale(d.size); });
+
+	groupnodeupd = groupnode
+		.enter()
+		.append("circle")
+		.attr("class", "onenode")
+		.call(d3.drag()
+			.on("start", dragstarted)
+			.on("drag", dragged)
+			.on("end", dragended))
+		.attr("fill", function(d) { return color(d.publisherid); })
+		.attr("r", function(d) { return nodescale(d.size); })
+		.merge(groupnode)
+		.attr('stroke', function(d){ return (d.publisherid == fromfilter) ? 'yellow' : 'white'; } )
+		.attr('stroke-width', function(d){ return (d.publisherid == fromfilter) ? 4 : 1; })
+		.on("mouseover", function(d){
+			d3
+				.selectAll('.onelink')
+				.transition()
+				.style('stroke-opacity', linkopacity_hidden);
+			d3
+				.selectAll('.nodetext')
+				.transition()
+				.style('opacity', labelopacity_hidden);
+			d3
+				.selectAll(".nodetext")
+				.filter(function(e){ return e.publisherid == d.publisherid; })
+				.transition()
+				.style('font-size', (fontsizeOnmouseover) + '%')
+				.style("opacity", labelopacity_on)
+				.text(function(e){ return `${e.publisher} (${e.size})`; });
+			d3
+				.select(this)
+				.transition()
+				.attr("r", nodesradiusrange[1]);
+			d3
+				.selectAll(".onelink")
+				.filter(function(e){ return (d.publisherid == e.source.publisherid || d.publisherid == e.target.publisherid); })
+				.transition()
+				.style('stroke', function(e){ return color(d.publisherid); })
+				.style('stroke-opacity', function(e){ return linkopacity_on; });
+		})
+		.on("mouseout", function(d){
+			d3
+				.selectAll('.onelink')
+				.transition()
+				.style('stroke', '#999')
+				.style('stroke-opacity', linkopacity_off);
+
+			d3
+				.selectAll(".nodetext")
+				//.filter(function(e){ return e.publisherid == d.publisherid; })
+				.transition()
+				.style('font-size', (fontsize) + '%')
+				.style("opacity", labelopacity_off)
+				.text(function(e){ return e.publisher; });
+			d3
+				.select(this)
+				.transition()
+				.attr("r", function(a) { return nodescale(a.size); });
+		})
+		.on("click", function(d){
+			fromfilter = d.publisherid;
+			d3.select('#iidvalue').text(d.size);
+			d3.select('#docidvalue').text(d.distinctdocid);
+			d3.select('#medianvalue').text(Math.round(d.mediannbdistinctdocidperiid));
+			d3.select('#sevfivevalue').text(Math.round(d.q75nbdistinctdocidperiid));
+			drawgraph(nodes, links);
+			// To avoid the SVG click (removing the filter)
+			d3.event.stopPropagation()
+
+		});
+
+
+	// TEXT NODES
+	textnode = svg
+		.select(".alltextnodes")
+		.selectAll(".nodetext")
+		.data(nodesfiltered, function(d){ return d.publisherid; });
+
+	textnode.exit().remove();
+
+	textnodeupd = textnode
+		.enter()
+		.append("text")
+		.attr('class', "nodetext")
+		.attr('fill', 'white')
+		.merge(textnode)
+		.attr('text-anchor', "middle")
+		.style('font-size', (fontsize) + '%')
+		.style("opacity", labelopacity_off)
+		.attr("pointer-events", "none")
+		.text(function(d) { return d.publisher });
+
+	// RUN THE FORCES
+	simulation
+		.nodes(nodesfiltered) //Replace with 'viznodesfiltered' if update of forces is needed while filter is changing - 'nodes' otherwise
+		.on("tick", ticked);
+
+	simulation
+		.force("link")
+		.links(linksfiltered); //Replace with 'vizlinksfiltered' if update of forces is needed while filter is changing - 'links' otherwise
+
+	simulation.nodes(nodesfiltered).alpha(0.5).restart();
+
+	$(window).on('resize', function(){ simulation.nodes(nodesfiltered).alpha(0.5).restart(); });
+};
+
+function ticked() {
+	var radius = nodesradiusrange[1];
+	var localwidth = width;
+	var localheight = height;
+
+	function xlim (a) { return Math.max(radius, Math.min(localwidth - radius, a)); };
+	function ylim(b) { return Math.max(radius, Math.min(localheight - radius, b)); };
+	
+	groupnodeupd
+		.attr("cx", function(d) { return xlim(d.x); })
+		.attr("cy", function(d) { return ylim(d.y); });
+
+	textnodeupd
+		.attr("dx", function(d){ return xlim(d.x); })
+		.attr("dy", function(d){ return ylim(d.y /*+ nodescale(d.size)/2*/); });
+
+	linkupd
+		.attr("x1", function(d) { return xlim(d.source.x); })
+		.attr("y1", function(d) { return ylim(d.source.y); })
+		.attr("x2", function(d) { return xlim(d.target.x); })
+		.attr("y2", function(d) { return ylim(d.target.y); });
+};
+
+function zoomed(){
+	svg.attr("transform", d3.event.transform);
+};
+
+function dragstarted(d) { 
+	simulation.alphaTarget(0.3).restart();
+	d.fx = d.x;
+	d.fy = d.y;
+};
+
+function dragged(d) {
+	d.fx = d3.event.x;
+	d.fy = d3.event.y;
+};
+
+function dragended(d) {
+	//simulation.alphaTarget(0);
+	if(clickcounter%2 == 0){
+		d.fx = null;
+		d.fy = null;
+	};
+};
+
+</script>

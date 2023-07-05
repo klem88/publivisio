@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<title>Boussole - ScholarVox</title>
+<link rel="stylesheet" href="css/css.css">
+
+<script type="text/javascript">
+    var param = {}
+    location.search.substr(1).split("&").forEach(
+        function(item){
+            param[item.split("=")[0]] = item.split("=")[1];
+        }
+    );
+    //console.log(param);
+</script>
+<script src="js/jquery-1.11.3.min.js"></script>
+<script src="js/demo.js"></script>
+<script type="text/javascript" src="js/dothemagicdance.js"></script>
+<script src="js/d3.min.js"></script>
+<script src="js/boussole.js" id="boussolescript" defer></script>
+
+</head>
+<body>
+
+<div class="deviceAlert"><h3>L'affichage de votre écran ne permet pas une visualisation correcte de ce site. Visitez nous avec un autre support.</h3>
+</div>
+<div class="darkDiv country">
+        <a href="#" class="darkDivClose"><img src="images/pictoClose.png" alt="Close"></a>
+        <a class="button darkDivButton" href="#" id="darkDivButton">Envoyer</a> 
+    <div class="darkDivMain countriesDiv">
+    </div>
+</div>
+<div class="darkDiv institution">
+        <a href="#" class="darkDivClose"><img src="images/pictoClose.png" alt="Close"></a>
+        <a class="button darkDivButton" href="#" id="darkDivButton">Envoyer</a> 
+    <div class="darkDivMain institutionsDiv">
+    </div>
+</div>
+<div class="darkDiv publisher">
+        <a href="#" class="darkDivClose"><img src="images/pictoClose.png" alt="Close"></a>
+        <a class="button darkDivButton" href="#" id="darkDivButton">Envoyer</a> 
+    <div class="darkDivMain publishersDiv">
+    </div>
+</div>
+<div class="darkDiv decitre">
+        <a href="#" class="darkDivClose"><img src="images/pictoClose.png" alt="Close"></a>
+        <a class="button darkDivButton" href="#" id="darkDivButton">Envoyer</a> 
+    <div class="darkDivMain decitreDiv">
+    </div>
+</div>
+<div class="darkDiv cyberclass">
+        <a href="#" class="darkDivClose"><img src="images/pictoClose.png" alt="Close"></a>
+        <a class="button darkDivButton" href="#" id="darkDivButton">Envoyer</a> 
+    <div class="darkDivMain cyberclassDiv">
+    </div>
+</div>
+<div class="header">
+    <a href="../homepage/index.html"><img id = 'return' src = './images/icon_return.png'></a>
+    <div class="socialLinks">
+	<!--     <a href="https://www.facebook.com/pages/Scholarvox/726851407337964" target="_blank"><img src="images/pictoFacebook.png" alt="Facebook"></a>
+		 <a href="https://twitter.com/ScholarvoxEdito" target="_blank"><img src="images/pictoTweeter.png" alt="Tweeter"></a>
+		 <a href="https://www.youtube.com/watch?v=u3ynKwhLrtA&amp;list=PLHC_dbFLZp1o-LrfZoCufdScHlCpXhSyU" target="_blank"><img src="images/pictoYoutube.png" alt="Youtube"></a>
+	-->
+    </div>
+    <div class="mainLogo">
+	    <a href="#"><img id="headerlogo" src="images/mainLogo.jpg" alt="ScholarVOX"></a>
+    </div>
+    <div class="switch">
+        <a href="#" id="switchButton" class="switchButton dayNote"> </a>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="dataviewer">
+    <div class="cockpit">
+        
+    <div class="expandButton">
+        <a href="#"><img src="images/expandButton.png"></a>
+    </div>  
+        <div class="container">
+            <!--<p>Mininum Books Shared : <span class="booksNumbers">-</span> </p>-->
+            <p id="sliderlinkvalue">
+             <span id = 'paramlinklabellib'> Mininum Books Shared :</span>
+                <!--<input id="paramlinklabel" type="number">-->
+                <span id="paramlinklabel"></span>
+                <input id="paramlinkvalue" min="0" max="1000" value="500" type="range">
+            </p>
+            <p> <span id="allCountrieslib"> - :</span> <strong id="allCountries">-</strong> <a href="#" class="showCountriesDiv">modify</a></p>
+            <p> <span id="allInstitutionslib"> - :</span> <strong id="allInstitutions">-</strong> <a href="#" class="showInstitutionsDiv">modify</a></p>
+            <p> <span id="allPublisherslib"> - :</span> <strong id="allPublishers">-</strong> <a href="#" class="showPublishersDiv">modify</a></p>
+            <p> <span id="allThemeslib"> - :</span> <strong id="allThemes">-</strong> <a href="#" class="showDecitreDiv">modify</a></p>
+            <p> <span id="allCyberclasslib"> - :</span> <strong id="allCyberclass">-</strong> <a href="#" class="showCyberclassDiv">modify</a></p>
+            <p> <span id="freeNodeslib"> Free the nodes :</span> <a href="#" class="freeNodesDiv">Free the nodes</a></p>
+        </div>
+    </div>
+
+    <div class="graphVisualisation"></div>
+
+    <div class="bottomViewer hidden">
+        <div class="mario">
+            <p id='institutionsname'>-</p>
+            <p> <span id='numberofbooks'> - :</span> <strong id="thenumber">-</strong></p>
+            <a href="#" class="close">Close</a>
+        </div>
+        <div class="luigi">
+            <div class="itemsContainerFR">
+                <div class="itemlang"><p class="lang">Fr</p></div>
+                <g id="itemimg">
+                </g>
+                <div class="itemmore"><p class="moreCovers"><a href="#">...</a></p></div>
+            </div>
+            <div class="itemsContainerEN">
+                <div class="itemlang"><p class="lang">En</p></div>
+                <g id="itemimg">
+                </g>
+                <div class="itemmore"><p class="moreCovers"><a href="#">...</a></p></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>

@@ -1,0 +1,145 @@
+@charset "UTF-8";  
+/* CSS Document */
+@font-face {
+    font-family: 'adventregular';
+    src: url('fonts/adventregular.eot');
+    src: url('fonts/adventregular.eot') format('embedded-opentype'),
+         url('fonts/adventregular.woff2') format('woff2'),
+         url('fonts/adventregular.woff') format('woff'),
+         url('fonts/adventregular.ttf') format('truetype'),
+         url('fonts/adventregular.svg#adventregular') format('svg');
+}
+@font-face {
+    font-family: 'adventbold';
+    src: url('fonts/adventbold.eot');
+    src: url('fonts/adventbold.eot') format('embedded-opentype'),
+         url('fonts/adventbold.woff2') format('woff2'),
+         url('fonts/adventbold.woff') format('woff'),
+         url('fonts/adventbold.ttf') format('truetype'),
+         url('fonts/adventbold.svg#adventbold') format('svg');
+}
+@font-face {
+    font-family: 'adventlight';
+    src: url('fonts/adventlight.eot');
+    src: url('fonts/adventlight.eot') format('embedded-opentype'),
+         url('fonts/adventlight.woff2') format('woff2'),
+         url('fonts/adventlight.woff') format('woff'),
+         url('fonts/adventlight.ttf') format('truetype'),
+         url('fonts/adventlight.svg#adventlight') format('svg');
+}
+*{	outline: none;
+	margin: 0;
+	padding:0;
+	outline: none;}
+html, body{
+	font-family: adventregular, Helvetica, Arial, sans-serif;
+	letter-spacing: 1px;
+	color: #252723;
+	height: 100%;
+	font-size: 20px;}
+html{
+	background: url(../images/bgd01.jpg) center center fixed;
+	-webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+	background-size: cover;}
+strong{
+	font-family: adventbold, Helvetica, Arial, sans-serif;
+	font-weight: normal;
+}
+.deviceAlert{
+	z-index: 400;
+	display: none;
+	background: red;
+	height: calc(100vh - 40px);
+	width: calc(100vw - 40px);
+	padding: 20px;
+	color: #fff;
+	font-family: adventlight, Helvetica, Arial, sans-serif;
+	font-size: 20px;
+	letter-spacing: 1px;
+	text-align: center;}
+.deviceAlert h3{
+	margin-top: 30vh;}
+.smallSize .header, .smallSize .container{
+	display: none !important;}
+.smallSize .deviceAlert{
+	display: block !important;}
+/*888888888888888888888888888888888888888888888888888888888*/
+.intro{
+	width: 40vw;
+	height: 50vh;
+	margin: 0 auto;
+	position: relative;
+	top: 25vh;
+	min-width: 350px;}
+.mainLogo{
+	left: -8px;	
+	position: relative;
+	width: 100%;}
+.intro ul {
+    list-style: none;}
+.intro li{
+	margin-bottom: 10px;}
+.intro h1{
+	margin-bottom: 1em;
+	line-height: 1em;}
+.intro .champTexte {
+    border: none;
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+    font-family: adventregular, Helvetica, Arial, sans-serif;
+    letter-spacing: 1px;
+    width: 90%;
+    padding: 7px 3px 1px 3px;
+    margin-bottom: 10px;
+    font-size: 20px;}
+.intro .forgot{
+	margin: 2vh 0;}
+.intro .forgot a{
+	color: #252723;
+	font-size: 20px;
+	text-decoration: none;
+	font-family: adventbold, Helvetica, Arial, sans-serif;}
+.button{
+	padding: 19px 10px 15px 10px !important;
+	color: #fff !important;
+	text-decoration: none;
+	background: #382180;
+	font-size: 20px;
+	letter-spacing: 2px;
+	vertical-align: baseline;
+	display: inline-block;
+	margin: 10px 0;
+    border: none;
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+	font-family: adventbold, Helvetica, Arial, sans-serif;
+	text-transform: uppercase;}
+.errorMessage{
+	font-family: adventbold, Helvetica, Arial, sans-serif;
+	margin: 2vh 0;
+	color: #aa0c0c;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

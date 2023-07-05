@@ -1,0 +1,200 @@
+@charset "UTF-8";
+/* CSS Document */
+
+*{}
+body{}
+.zoom {
+  zoom: 150%;
+}
+
+body {
+    -webkit-text-size-adjust:none;
+}
+body.smallSize { 
+	/*overflow: hidden;*/}
+.header {
+    min-width: 400px;
+	height: 230px;}
+.mainLogo {
+    width: 90%;
+	top: 110px;
+	margin-left: 0;
+	left: 5%;}
+.mainLogo a {
+    width: auto;
+    height: 64px;}
+.mainLogo img{
+	width: 100% !important;
+	top: 40px;}
+.item {
+    min-width: 400px;}
+.smartCourseshelf {
+    width: 80%;
+	left: 50%;
+	margin-left: -40%;
+	float: initial;}
+.smartCourseshelfShowRoom {
+    min-width: 400px;}
+.showRoom{
+	min-width: 400px;
+	padding-left: 0 !important;
+	overflow: inherit;}
+.showRoom a {
+    display: block;}
+.showRoom .container {
+    width: 100%;
+	min-width: 400px !important;}
+.commentMarger{
+	width: 50%;
+	display: block;
+	margin: 0 auto 50px auto;}
+.comment{
+	margin-left: 0;
+	display: block;
+	width: 100%;}
+.comment a{
+	margin: 0;}
+.comment img{
+	width: 100%;
+	height: inherit;}
+.comment a.user img{
+	width: 25%;
+	height: inherit;}
+.commentMarger .comment p{
+	margin: 0 !important;}
+.bubble{
+	width: calc(100% - 10px);}
+.oneLineVisuals .container, .oneLineVisuals {
+	height: auto;
+	text-align: center;}
+.oneLineVisuals .container, .oneLineVisuals a img{
+	width: 80%;
+	height: auto;
+	margin: 0 auto;}
+.smartCourseshelfShowRoom .container {
+	min-width: 400px !important;}
+.searchBloc{
+	top: 45px;
+    min-width: 380px;
+	left: 0%;
+	margin: 0 auto;}
+.search {
+    min-width: 400px;
+    /* min-width: 640px;*/}
+.search li{}
+.footer {
+    min-width: 400px;}
+.rightNav{
+	font-size: 30px;
+	top: -5px;}
+.searchBloc .champTexte{
+	font-size: 20px;
+	width: 60% !important;
+	height: 25px;
+	color: #5c5b5b;}
+.searchBloc .selectiselecta{
+	background: #FFF url(/images/select_background.png) no-repeat right 0px;
+	width: 76%;
+	margin-right: 1%;}
+.searchBloc .selectiselecta:hover {
+	background: #FFF url(/images/select_background.png) no-repeat right 0px;}
+.search {
+    height: 130px;}
+.searchBloc select {
+    height: 35px !important;
+	width: 470px !important;
+	background: none !important;}
+.searchBloc li {
+    margin-top: 10px;}
+.searchBloc a.button{
+	text-align: center;;
+	height: 21px !important;
+	display: inline-block;
+	vertical-align: top;
+	top: 2px;
+	position: relative;
+	padding: 12px 10px 2px 10px !important;
+	width: 13%;}
+#searchterm{
+	font-size: 20px !important;}
+.searchBloc ul{
+	width: 100%;
+	text-align: left;
+	left: 2%;
+	position: relative;
+	min-width: 380px;
+	margin-bottom: 50px;}
+.luna {
+    min-width: 400px;}
+.notChamps{
+	display: none;}
+.advSearch{
+	top: -6px !important;
+	padding: 0;}
+.subSearch{
+	min-width:400px !important;}
+.subSearch .searchBloc{
+	top: 20px;}
+.navBox{
+	top: 0;
+	left: 0;
+	width: 100%;
+	min-width: 400px;}
+.navBox li{
+	font-size: 28px;
+	line-height: 65px !important;}
+.navBox .close{
+	position:absolute;
+	top:25px;
+	right: 20px;}
+.loginBox .champTexte{
+	font-size: 22px;
+	width: 85% !important;
+	padding: 16px 5px 8px 5px;
+	margin-bottom: 25px;
+	font-size: 25px;}
+.loginBox .button{
+	font-size: 25px;
+	margin: 20px auto  20px auto;
+	display: table;
+	height: 50px !important;
+	width: 100% !important;
+	padding: 12px 10px 15px 10px;}
+.onlineGuyMarger{
+	width: 100%;
+	display: block;
+	margin: 0 auto 50px auto;}
+.onlineGuy{
+	width: 50%;
+	display: block;
+	margin: 0 auto;}
+.onlineGuy img {
+    width: 100%;
+    height: inherit;}
+
+.checkbox-custom-label, .radio-custom-label{
+	display: block;}
+.subSearch li{
+	text-align: center;}
+.checkbox-custom, .checkbox-custom-label, .radio-custom, .radio-custom-label{
+	display: block;}
+
+.subSearch li{
+	font-size: 20px;
+	display: block;
+	width: 60%;
+	text-align: left;
+	margin: 0 auto;
+	padding: 5px 0;}
+	
+
+.footer{
+	min-width: 400px;}
+.footerOne{
+	width: 90% !important;}
+.footerOne .logo {
+    width: 100%;}
+.footerItem{
+	width: 40%;
+	margin-right: 0;
+	margin-bottom: 40px;}
